@@ -1,14 +1,14 @@
 import React,{useState} from "react";
 import User from "./user";
 
-const BookMark = ()=>{
-    const [select,setSelect] = useState(false)
+const BookMark = (props)=>{
+    const [select,setSelect] = useState(props.BookMark)
     const handleSelect = () => {
-      // console.log(select)
+    
         setSelect((prevState)  => !prevState)
     }
     
-    // {status, ...rest}
+   
     
     
     if (select) {

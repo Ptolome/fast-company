@@ -1,17 +1,11 @@
-import React, { useState } from "react";
-import api from "../api"
+import React from "react";
+
 import "bootstrap/dist/css/bootstrap.css"
 import SearchStatus from "./searchStatus";
 import User from "./user";
 
-const Users=() => {
-    // console.log(api.users.fetchAll())
-    const [users, setUsers] = useState(api.users.fetchAll())
-    const handleDelete = (userId) => {
-      
-      setUsers(prevState=>prevState.filter(users =>users._id !==userId ))
-
-    };
+const Users=({users, ...rest}) => {
+  
     
     return users.length !==0? (
      <> 
@@ -33,7 +27,9 @@ const Users=() => {
     {users.map((user) =>(
      <User key={users._id}
       {...user}
-      onDelete={handleDelete}/>        
+      {...rest}
+     
+      />        
            
        ))}
       
