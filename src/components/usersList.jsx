@@ -8,16 +8,22 @@ import SearchStatus from "./searchStatus";
 import UserTable from "./usersTable";
 import _ from "lodash";
 
-const Users = () => {
+const UsersList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
-    const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
+    const [sortBy, setSortBy] = useState({
+        iter: "name",
+        order: "asc"
+    });
     const pageSize = 8;
     const [users, setUsers] = useState();
+    const [searchUsers, setSearchUsers] = useState();
+    const [searchName, setSearchName] = useState("");
     useEffect(() => {
         api.users.fetchAll().then((data) => {
             setUsers(data);
+            setSearchUsers(data);
         });
     }, []);
     const handleDelete = (userId) => {
@@ -50,17 +56,28 @@ const Users = () => {
         setCurrentPage(pageIndex);
     };
 
+    const handleSearch = (e) => {
+        e.preventDefault();
+        setSearchName(e.target.value);
+        console.log("searchUsers", searchUsers);
+        setUsers(searchUsers);
+        setUsers((prevState) =>
+            searchName.length !== 0
+                ? prevState.filter((user) => user.name.includes(e.target.value))
+                : users
+        );
+        console.log("users", users);
+    };
     const handleSort = (item) => {
         setSortBy(item);
     };
-
     if (users) {
         const filteredUsers = selectedProf
             ? users.filter(
-                (user) =>
-                    JSON.stringify(user.profession) ===
-                    JSON.stringify(selectedProf)
-            )
+                  (user) =>
+                      JSON.stringify(user.profession) ===
+                      JSON.stringify(selectedProf)
+              )
             : users;
 
         const count = filteredUsers.length;
@@ -94,6 +111,18 @@ const Users = () => {
                 )}
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
+                    <form
+                        className="d-flex flex-column"
+                        onSubmit={(e) => e.preventDefault()}
+                    >
+                        <input
+                            type="text"
+                            name="search"
+                            placeholder="Search..."
+                            value={searchName}
+                            onChange={handleSearch}
+                        />
+                    </form>
                     {count > 0 && (
                         <UserTable
                             users={usersCrop}
@@ -118,8 +147,8 @@ const Users = () => {
     return "loading...";
 };
 
-Users.propTypes = {
+UsersList.propTypes = {
     users: PropTypes.array
 };
 
-export default Users;
+export default UsersList;

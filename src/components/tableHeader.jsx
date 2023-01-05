@@ -38,13 +38,6 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
                         { columns[column].name } { rendeSortArrow(selectedSort, columns[column].path) }
                     </th>
                 )) }
-                {/* <th onClick={() => handleSort("name")} scope="col">Имя</th>
-                <th scope="col">Качества</th>
-                <th onClick={() => handleSort("profession.name")} scope="col">Провфессия</th>
-                <th onClick={() => handleSort("completedMeetings")} scope="col">Встретился, раз</th>
-                <th onClick={() => handleSort("rate")} scope="col">Оценка</th>
-                <th onClick={() => handleSort("bookmark")} scope="col">Избранное</th>
-                <th/> */}
             </tr>
         </thead>
     );

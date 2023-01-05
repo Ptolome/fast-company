@@ -1,19 +1,21 @@
 import React from "react";
 import NavBar from "./components/navBar";
-import Users from "./components/users";
-import Main from "./components/main";
-import Login from "./components/login";
-import { Route } from "react-router-dom";
-import UserCard from "./components/userCard";
+import Users from "./components/layouts/users";
+import Main from "./components/layouts/main";
+import Login from "./components/layouts/login";
+import { Route, Switch } from "react-router-dom";
 
 function App() {
-    return <div>
-        <NavBar/>;
-        <Route path="/" exact component = {Main}/>
-        <Route path="/login" component = {Login}/>
-        <Route path="/users/:userCard" render={(props) => (<UserCard {...props}/>)}/>
-        <Route path="/users" exact component = {Users}/>
-    </div>;
+    return (
+        <div>
+            <NavBar/>;
+            <Switch>
+                <Route path = "/users/:userId?" component = {Users} />
+                <Route path = "/login" component = {Login}/>
+                <Route path= "/" exact component = {Main}/>
+            </Switch>
+        </div>
+    );
 }
 
 export default App;
