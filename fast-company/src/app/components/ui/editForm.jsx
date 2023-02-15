@@ -4,9 +4,10 @@ import api from "../../api";
 import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const EditForm = ({ match, location }) => {
+    const history = useHistory();
     const userId = match.params.userId;
     const [user, setUser] = useState();
     useEffect(() => {
@@ -65,7 +66,7 @@ const EditForm = ({ match, location }) => {
     console.log(data);
     const [qualities, setQualities] = useState();
     const [professions, setProfession] = useState([]);
-    console.log("dataqualities", data.qualities);
+
     const getProfessionById = (id) => {
         for (const prof of professions) {
             if (prof.value === id) {
@@ -99,7 +100,9 @@ const EditForm = ({ match, location }) => {
             [target.name]: target.value
         }));
     };
-
+    const hadleBack = () => {
+        history.push(`/users/${userId}`);
+    };
     const handleSubmit = () => {
         const dataUp = data.qualities?.map((item) => ({
             _id: item.value,
@@ -115,68 +118,76 @@ const EditForm = ({ match, location }) => {
 
         data.profession = getProfessionById(profession);
         data.qualities = dataUp;
-
+        console.log(data);
         api.users.update(userId, data);
     };
 
     return (
         qualities && (
-            <div className="container mt-5">
-                <div className="row">
-                    <div className="col-md-6 offset-md-3 shadow p-4">
-                        <form onSubmit={handleSubmit}>
-                            <TextField
-                                label="Имя"
-                                name="name"
-                                value={data.name}
-                                onChange={handleChange}
-                            />
-                            <TextField
-                                label="Электронная почта"
-                                name="email"
-                                value={data.email}
-                                onChange={handleChange}
-                            />
+            <>
+                <div className="container mt-5 position-relative">
+                    <button
+                        onClick={hadleBack}
+                        className="position-absolute top-10 start-10 btn btn-primary btn-sm"
+                    >
+                        назад
+                    </button>
+                    <div className="row">
+                        <div className="col-md-6 offset-md-3 shadow p-4">
+                            <form onSubmit={handleSubmit}>
+                                <TextField
+                                    label="Имя"
+                                    name="name"
+                                    value={data.name}
+                                    onChange={handleChange}
+                                />
+                                <TextField
+                                    label="Электронная почта"
+                                    name="email"
+                                    value={data.email}
+                                    onChange={handleChange}
+                                />
 
-                            <SelectField
-                                label="Выбери свою профессию"
-                                defaultOption="Choose..."
-                                options={professions}
-                                name="profession"
-                                onChange={handleChange}
-                                value={data.profession}
-                            />
-                            <RadioField
-                                options={[
-                                    { name: "Male", value: "male" },
-                                    { name: "Female", value: "female" },
-                                    { name: "Other", value: "other" }
-                                ]}
-                                value={data.sex}
-                                name="sex"
-                                onChange={handleChange}
-                                label="Выберите ваш пол"
-                            />
-                            <MultiSelectField
-                                options={qualities}
-                                onChange={handleChange}
-                                defaultValue={data.qualities}
-                                name="qualities"
-                                label="Выберите ваши качества"
-                            />
-                            <Link to={`/users/${userId}`}>
-                                <button
-                                    className="btn btn-primary w-100 mx-auto"
-                                    type="submit"
-                                    onClick={handleSubmit}
-                                >
-                                    Изменить
-                                </button>
-                            </Link>
-                        </form>
+                                <SelectField
+                                    label="Выбери свою профессию"
+                                    defaultOption="Choose..."
+                                    options={professions}
+                                    name="profession"
+                                    onChange={handleChange}
+                                    value={data.profession}
+                                />
+                                <RadioField
+                                    options={[
+                                        { name: "Male", value: "male" },
+                                        { name: "Female", value: "female" },
+                                        { name: "Other", value: "other" }
+                                    ]}
+                                    value={data.sex}
+                                    name="sex"
+                                    onChange={handleChange}
+                                    label="Выберите ваш пол"
+                                />
+                                <MultiSelectField
+                                    options={qualities}
+                                    onChange={handleChange}
+                                    defaultValue={data.qualities}
+                                    name="qualities"
+                                    label="Выберите ваши качества"
+                                />
+                                <Link to={`/users/${userId}`}>
+                                    <button
+                                        className="btn btn-primary w-100 mx-auto"
+                                        type="submit"
+                                        onClick={handleSubmit}
+                                    >
+                                        Изменить
+                                    </button>
+                                </Link>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </>
         )
     );
 };
